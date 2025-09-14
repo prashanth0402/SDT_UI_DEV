@@ -1,3 +1,35 @@
-<v-container>
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem fuga voluptatem quo accusantium fugit, culpa qui earum sequi? Neque temporibus beatae perferendis aut adipisci culpa vel hic. Suscipit, iste hic!
-</v-container>
+<div class="mx-10">
+  <v-tabs v-model="tabVal" color="primary" fixed-tabs bg-color="teal-accent-1" class="mt-4">
+    <v-tab v-for="item in tabDetails" :key="item.name">
+      <v-icon class="mr-2"> {{ item.icon }}</v-icon>
+      {{ item.name }}
+    </v-tab>
+  </v-tabs>
+  <v-tabs-window v-model="tabVal">
+    <v-tabs-window-item v-for="item in tabDetails" :key="item.name">
+      <v-btn class="my-5" color="success" variant="flat" label @click="actionRoleTask(item.name)">
+        <v-icon class="mr-3">mdi-plus-box</v-icon>
+        Add {{item.name}}</v-btn>
+      <v-card>
+        <v-row class="mb-3">
+          <v-col cols="12" md="4">
+            <v-text-field v-model="search" :append-icon="search ? 'mdi-close' : 'mdi-magnify'" label="Search"
+              variant="underlined" density="compact" single-line hide-details
+              @click:append="search = ''"></v-text-field>
+          </v-col>
+        </v-row>{{item.name}}
+        <v-data-table :headers="item.tableHeaders" :items="item.tableValue" height="400" fixed-header :search="search">
+          <template v-slot:item.deleteItem="{ item }">
+            <div class="d-flex ga-5">
+              <v-icon color="primary " icon="mdi-pencil" size="small" @click="edit(item)"></v-icon>
+
+              <v-icon color="red" icon="mdi-delete" size="small" @click="remove(item)"></v-icon>
+            </div>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-tabs-window-item>
+  </v-tabs-window>
+
+  <RoleTaskDialog :toggleDialog="toggleDialog" :dialogPuropse="dialogPuropse" :dialogTitle="dialogTitle" :editItem="editItem" @closeDialog="closeDialog" @refreshTable="GetRoleTaskDetails"/>
+</div>

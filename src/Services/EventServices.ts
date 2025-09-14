@@ -12,5 +12,17 @@ const baseApiClient = axios.create({
 export default {
   getEmpDetails() {
     return baseApiClient.get("/getDashboardDetails");
+  },
+  GetRoleTaskDetails(){
+    return baseApiClient.get("/getRoleTaskDetails")
+  },
+  addRoleAndTaskDetails(data: Object){
+    return baseApiClient.post("/addRoleTaskDetails",data)
+  },
+  getRoleTaskDropdown(){
+    return baseApiClient.get("/getRoleTaskDropdown")
+  },
+  updateRoleAndTask(data:Object){
+    return baseApiClient.post("/updtRoleAndTask",data)
   }
 };

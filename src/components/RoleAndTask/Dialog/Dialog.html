@@ -1,0 +1,135 @@
+<v-dialog :model-value="props.toggleDialog" max-width="600" persistent>
+    <v-card>
+        <v-card-title class="bg-primary">
+            <v-row>
+                <v-col>
+                    <v-icon v-if="props.dialogPuropse=='Add'" class="mr-2">mdi-plus-box</v-icon>
+                    <v-icon v-else-if="props.dialogPuropse=='Edit'" class="mr-2">mdi-table-edit</v-icon>
+                    {{props.dialogPuropse}} {{ props.dialogTitle }}</v-col>
+                <v-col class="d-flex justify-end">
+                    <v-icon size="small" @click="closeDialog">mdi-close</v-icon>
+                </v-col>
+            </v-row>
+        </v-card-title>{{editval}}
+        <v-card-text>
+            <div v-if="props.dialogTitle=='Role Details'">
+                <v-form ref="inputValidation" @submit.prevent="insertDetails" lazy-validation>
+                    <v-row>
+                        <v-col>
+                            <v-text-field v-if="props.dialogPuropse=='Add'" :rules="requiredRule" label="Role Name" density="compact" class="mt-2"
+                                v-model="addRoleDetails.role" variant="outlined" />
+
+                                <v-text-field v-else :rules="requiredRule" label="Edit Role Name" density="compact" class="mt-2"
+                                v-model="editval.role" variant="outlined" />
+
+                        </v-col>
+                        <v-col class="d-flex justify-center">
+                            <v-switch v-if="props.dialogPuropse=='Add'" label="Active Status" true-value="Y" false-value="N"
+                                v-model="addRoleDetails.isActive" color="success"></v-switch>
+
+                                <v-switch v-else label="Active Status" true-value="Y" false-value="N"
+                                v-model="editval.isActive" color="success"></v-switch>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-textarea v-if="props.dialogPuropse=='Add'" v-model="addRoleDetails.description" rows="1" clearable label="Description"
+                                variant="outlined"></v-textarea>
+                                <v-textarea v-else v-model="editval.description" rows="1" clearable label="Description"
+                                variant="outlined"></v-textarea>
+                        </v-col>
+                    </v-row>
+                    <v-row class="justify-end">
+                        <v-btn color="red" text="Cancel" variant="text" @click="closeDialog"></v-btn>
+                        <v-btn color="primary" text="Save" type="submit" variant="text"></v-btn>
+                    </v-row>
+                </v-form>
+            </div>
+
+            <div v-else-if="props.dialogTitle =='Task Details'">
+                <v-form ref="inputValidation" @submit.prevent="insertDetails" lazy-validation>
+                    <v-row>
+                        <v-col>
+                            <v-text-field v-if="props.dialogPuropse=='Add'" :rules="requiredRule" label="Task Name" density="compact" class="mt-2"
+                                v-model="addTaskDetails.task" variant="outlined" />
+
+                                <v-text-field v-else :rules="requiredRule" label="Task Name" density="compact" class="mt-2"
+                                v-model="editval.task" variant="outlined" />
+                        </v-col>
+                        <v-col>
+                            <v-text-field v-if="props.dialogPuropse=='Add'" :rules="requiredRule" label="Router Name" density="compact" class="mt-2"
+                                v-model="addTaskDetails.router" variant="outlined" />
+
+                                <v-text-field v-else :rules="requiredRule" label="Router Name" density="compact" class="mt-2"
+                                v-model="editval.router" variant="outlined" />
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-textarea v-if="props.dialogPuropse=='Add'" v-model="addTaskDetails.description" rows="1" clearable label="Description"
+                                variant="outlined"></v-textarea>
+
+                                <v-textarea v-else v-model="editval.description" rows="1" clearable label="Description"
+                                variant="outlined"></v-textarea>
+                        </v-col>
+                        <v-col class="d-flex justify-center">
+                            <v-switch v-if="props.dialogPuropse=='Add'" label="Active Status" true-value="Y" false-value="N"
+                                v-model="addTaskDetails.isActive" color="success"></v-switch>
+
+                            <v-switch v-else label="Active Status" true-value="Y" false-value="N"
+                                v-model="editval.isActive" color="success"></v-switch>
+                        </v-col>
+                    </v-row>
+                    <v-row class="justify-end">
+                        <v-btn color="red" text="Cancel" variant="text" @click="closeDialog"></v-btn>
+                        <v-btn color="primary" text="Save" type="submit" variant="text"></v-btn>
+                    </v-row>
+                </v-form>
+            </div>
+
+            <div v-else>
+                <v-form ref="inputValidation" @submit.prevent="insertDetails" lazy-validation>
+                    <v-row>
+                        <v-col>
+                            <v-select v-if="props.dialogPuropse=='Add'" :rules="requiredRule" :items="roleArr" label="Role Name" density="compact"
+                                class="mt-2" variant="outlined" v-model="addRoleTaskDetails.role"></v-select>
+                                
+                            <v-select v-else :rules="requiredRule" :items="roleArr" label="Role Name" density="compact"
+                                class="mt-2" variant="outlined" v-model="editval.role"></v-select>
+                        </v-col>
+                        <v-col>
+                            <v-select v-if="props.dialogPuropse=='Add'" :rules="requiredRule" v-model="addRoleTaskDetails.task" :items="taskArr"
+                                label="Task Name" density="compact" class="mt-2" variant="outlined"></v-select>
+                                
+                            <v-select v-else :rules="requiredRule" v-model="editval.task" :items="taskArr"
+                                label="Task Name" density="compact" class="mt-2" variant="outlined"></v-select>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-textarea v-if="props.dialogPuropse=='Add'" v-model="addRoleTaskDetails.description" rows="1" clearable label="Description"
+                                variant="outlined"></v-textarea>
+                                
+                            <v-textarea v-else v-model="editval.description" rows="1" clearable label="Description"
+                                variant="outlined"></v-textarea>
+                        </v-col>
+                        <v-col class="d-flex justify-center">
+                            <v-switch v-if="props.dialogPuropse=='Add'" label="Active Status" true-value="Y" false-value="N"
+                                v-model="addRoleTaskDetails.isActive" color="success"></v-switch>
+                                
+                            <v-switch v-else label="Active Status" true-value="Y" false-value="N"
+                                v-model="editval.isActive" color="success"></v-switch>
+
+                        </v-col>
+                    </v-row>
+                    <v-row class="justify-end">
+                        <v-btn color="red" text="Cancel" variant="text" @click="closeDialog"></v-btn>
+                        <v-btn color="primary" text="Save" type="submit" variant="text"></v-btn>
+                    </v-row>
+                </v-form>
+            </div>
+
+        </v-card-text>
+
+    </v-card>
+</v-dialog>
